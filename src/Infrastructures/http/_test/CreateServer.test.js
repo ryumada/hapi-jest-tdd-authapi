@@ -101,7 +101,7 @@ describe('HTTP server', () => {
 			const responseJson = JSON.parse(response.payload);
 			expect(response.statusCode).toEqual(400);
 			expect(responseJson.status).toEqual('fail');
-			expect(responseJson.message).toEqual('tidak dapat membuat user baru karena karaketer username melebihi batas limit');
+			expect(responseJson.message).toEqual('tidak dapat membuat user baru karena karakter username melebihi batas limit');
 		});
 
 		it('should response 400 when username contain restricted character', async () => {
