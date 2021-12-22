@@ -7,7 +7,7 @@
     "start": "node src/app.js",
     "start:dev": "nodemon src/app.js",
     "test": "jest --setupFiles dotenv/config",
-    "test:changed": "jest -o --setupFiles dotenv/config",
+    "test:changed": "jest --watch --coverage --setupFiles dotenv/config",
     "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config",
     "migrate": "node-pg-migrate",
     "migrate:test": "node-pg-migrate -f config/database/test.json"
@@ -19,6 +19,7 @@
     "@hapi/jwt": "^2.1.0",
     "bcrypt": "^5.0.1",
     "dotenv": "^10.0.0",
+    "instances-container": "^2.0.5",
     "nanoid": "^3.1.30",
     "pg": "^8.7.1"
   },
