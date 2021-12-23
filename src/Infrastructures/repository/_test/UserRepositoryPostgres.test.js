@@ -73,4 +73,24 @@ describe('UserRepositoryPostgres', () => {
 			}));
 		});
 	});
+
+	describe('getUser function', () => {
+		beforeEach(async () => {
+			await UsersTableTestHelper.addUser({username: 'dicoding'}); // Memasukkan user baru dengan nama username dicoding
+		});
+
+		it('should return the requested user data correctly', async () => {
+			// Arrange
+			const userRepositoryPostgres = new UserRepositoryPostgres(pool, {});
+
+			// Action
+			const resultUser = await userRepositoryPostgres.getUser('dicoding');
+
+			// Assert
+			expect(resultUser).toEqual({
+				id: 'user-123',
+				password: 'secret', // Some-hashed-password
+			});
+		});
+	});
 });

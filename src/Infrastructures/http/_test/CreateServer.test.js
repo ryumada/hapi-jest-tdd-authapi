@@ -166,6 +166,9 @@ describe('HTTP server', () => {
 		});
 	});
 
+	// eslint-disable-next-line no-warning-comments
+	// TODO: Create authentications testing
+
 	it('should handle server error correctly', async () => {
 		// Arrange
 		const requestPayload = {

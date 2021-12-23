@@ -7,8 +7,9 @@
     "start": "node src/app.js",
     "start:dev": "nodemon src/app.js",
     "test": "jest --setupFiles dotenv/config",
-    "test:changed": "jest --watch --coverage --setupFiles dotenv/config",
-    "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config",
+    "test:changed": "jest -o --coverage --setupFiles dotenv/config",
+    "test:watch": "jest --watch --coverage --setupFiles dotenv/config",
+    "test:watchAll": "jest --watchAll --coverage --setupFiles dotenv/config",
     "migrate": "node-pg-migrate",
     "migrate:test": "node-pg-migrate -f config/database/test.json"
   },
