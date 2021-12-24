@@ -11,7 +11,6 @@ const Jwt = require('@hapi/jwt');
 // Service (repository, helper, manager, etc)
 const AuthenticationRepositoryPostgres = require('./repository/AuthenticationRepositoryPostgres');
 const UserRepositoryPostgres = require('./repository/UserRepositoryPostgres');
-const BcryptPasswordCompare = require('./security/BcryptPasswordCompare');
 const BcryptPasswordHash = require('./security/BcryptPasswordHash');
 const JwtAuthTokenManager = require('./security/JwtAuthTokenManager');
 
@@ -21,7 +20,6 @@ const AuthenticationUseCase = require('../Applications/use_case/AuthenticationUs
 
 // Applications/security
 const AuthTokenManager = require('../Applications/security/AuthTokenManager');
-const PasswordCompare = require('../Applications/security/PasswordCompare');
 const PasswordHash = require('../Applications/security/PasswordHash');
 
 // Domains/repository
@@ -80,17 +78,6 @@ container.register([
 			],
 		},
 	},
-	{
-		key: PasswordCompare.name,
-		Class: BcryptPasswordCompare,
-		parameter: {
-			dependencies: [
-				{
-					concrete: bcrypt,
-				},
-			],
-		},
-	},
 ]);
 
 // Registering use case
@@ -127,8 +114,8 @@ container.register([
 					internal: UserRepository.name,
 				},
 				{
-					name: 'passwordCompare',
-					internal: PasswordCompare.name,
+					name: 'passwordHash',
+					internal: PasswordHash.name,
 				},
 				{
 					name: 'authTokenManager',

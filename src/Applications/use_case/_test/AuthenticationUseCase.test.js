@@ -4,7 +4,7 @@ const AddAuthentication = require('../../../Domains/authentications/entities/Add
 const AuthenticationRepository = require('../../../Domains/authentications/AuthenticationRepository');
 const UserRepository = require('../../../Domains/users/UserRepository');
 // Applications
-const PasswordCompare = require('../../security/PasswordCompare');
+const PasswordHash = require('../../security/PasswordHash');
 const AuthTokenManager = require('../../security/AuthTokenManager');
 // Applications/use_case
 const AuthenticationUseCase = require('../AuthenticationUseCase');
@@ -26,13 +26,13 @@ describe('AuthenticationUseCase', () => {
 			/** Creating dependency of use case */
 			const mockAuthenticationRepository = new AuthenticationRepository();
 			const mockUserRepository = new UserRepository();
-			const mockPasswordCompare = new PasswordCompare();
+			const mockPasswordHash = new PasswordHash();
 			const mockAuthTokenManager = new AuthTokenManager();
 
 			/** Mocking needed function */
 			mockUserRepository.getUser = jest.fn()
 				.mockImplementation(() => Promise.resolve(resultUser));
-			mockPasswordCompare.compare = jest.fn()
+			mockPasswordHash.compare = jest.fn()
 				.mockImplementation(() => Promise.resolve(true));
 			mockAuthTokenManager.generateAccessToken = jest.fn()
 				.mockImplementation(() => 'dummy_accessToken');
@@ -45,7 +45,7 @@ describe('AuthenticationUseCase', () => {
 			const getAuthenticationUseCase = new AuthenticationUseCase({
 				authenticationRepository: mockAuthenticationRepository,
 				userRepository: mockUserRepository,
-				passwordCompare: mockPasswordCompare,
+				passwordHash: mockPasswordHash,
 				authTokenManager: mockAuthTokenManager,
 			});
 
@@ -58,7 +58,7 @@ describe('AuthenticationUseCase', () => {
 			expect(tokens).toHaveProperty('refreshToken');
 			expect(typeof tokens.refreshToken).toEqual('string');
 			expect(mockUserRepository.getUser).toBeCalledWith(addAuthentication.username);
-			expect(mockPasswordCompare.compare).toBeCalledWith(addAuthentication.password, resultUser.password);
+			expect(mockPasswordHash.compare).toBeCalledWith(addAuthentication.password, resultUser.password);
 			expect(mockAuthTokenManager.generateAccessToken).toBeCalledWith({id: resultUser.id});
 			expect(mockAuthTokenManager.generateRefreshToken).toBeCalledWith({id: resultUser.id});
 			expect(mockAuthenticationRepository.addRefreshToken).toBeCalledWith('dummy_refreshToken');
@@ -77,18 +77,18 @@ describe('AuthenticationUseCase', () => {
 
 			/** Creating dependency of use case */
 			const mockUserRepository = new UserRepository();
-			const mockPasswordCompare = new PasswordCompare();
+			const mockPasswordHash = new PasswordHash();
 
 			/** Mocking needed function */
 			mockUserRepository.getUser = jest.fn()
 				.mockImplementation(() => Promise.resolve(resultUser));
-			mockPasswordCompare.compare = jest.fn()
+			mockPasswordHash.compare = jest.fn()
 				.mockImplementation(() => Promise.resolve(false));
 
 			/** Creating use case instance */
 			const getAuthenticationUseCase = new AuthenticationUseCase({
 				userRepository: mockUserRepository,
-				passwordCompare: mockPasswordCompare,
+				passwordHash: mockPasswordHash,
 			});
 
 			// Action & Assert

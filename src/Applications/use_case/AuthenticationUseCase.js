@@ -1,10 +1,10 @@
 const AddAuthentication = require('../../Domains/authentications/entities/AddAuthentication');
 
 class AuthenticationUseCase {
-	constructor({authenticationRepository, userRepository, passwordCompare, authTokenManager}) {
+	constructor({authenticationRepository, userRepository, passwordHash, authTokenManager}) {
 		this._authenticationRepository = authenticationRepository;
 		this._userRepository = userRepository;
-		this._passwordCompare = passwordCompare;
+		this._passwordHash = passwordHash;
 		this._authTokenManager = authTokenManager;
 	}
 
@@ -12,7 +12,7 @@ class AuthenticationUseCase {
 		const addAuthentication = new AddAuthentication(payload);
 		const {id, password: hashedPassword} = await this._userRepository.getUser(addAuthentication.username);
 
-		if (!await this._passwordCompare.compare(addAuthentication.password, hashedPassword)) {
+		if (!await this._passwordHash.compare(addAuthentication.password, hashedPassword)) {
 			throw new Error('AUTHENTICATION_USE_CASE.PASSWORD_MISMATCH');
 		}
 
