@@ -75,12 +75,9 @@ describe('UserRepositoryPostgres', () => {
 	});
 
 	describe('getUser function', () => {
-		beforeEach(async () => {
-			await UsersTableTestHelper.addUser({username: 'dicoding'}); // Memasukkan user baru dengan nama username dicoding
-		});
-
 		it('should return the requested user data correctly', async () => {
 			// Arrange
+			await UsersTableTestHelper.addUser({id: 'user-321', username: 'dicoding'}); // Memasukkan user baru dengan nama username dicoding
 			const userRepositoryPostgres = new UserRepositoryPostgres(pool, {});
 
 			// Action
@@ -88,7 +85,7 @@ describe('UserRepositoryPostgres', () => {
 
 			// Assert
 			expect(resultUser).toEqual({
-				id: 'user-123',
+				id: 'user-321',
 				password: 'secret', // Some-hashed-password
 			});
 		});
