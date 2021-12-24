@@ -1,6 +1,6 @@
-const AddAuthentication = require('../AddAuthentication');
+const NewAuth = require('../NewAuth');
 
-describe('an AddAuthentication entities', () => {
+describe('an NewAuth entities', () => {
 	it('should throw error when payload did not contain needed property', () => {
 		// Arrange
 		const payloads = [
@@ -14,7 +14,7 @@ describe('an AddAuthentication entities', () => {
 
 		// Action and Assert
 		payloads.forEach(payload => {
-			expect(() => new AddAuthentication(payload)).toThrowError('ADD_AUTHENTICATION.NOT_CONTAIN_NEEDED_PROPERTY');
+			expect(() => new NewAuth(payload)).toThrowError('NEW_AUTH.NOT_CONTAIN_NEEDED_PROPERTY');
 		});
 	});
 
@@ -33,11 +33,11 @@ describe('an AddAuthentication entities', () => {
 
 		// Action and Assert
 		payloads.forEach(payload => {
-			expect(() => new AddAuthentication(payload)).toThrowError('ADD_AUTHENTICATION.NOT_MEET_DATA_TYPE_SPECIFICATION');
+			expect(() => new NewAuth(payload)).toThrowError('NEW_AUTH.NOT_MEET_DATA_TYPE_SPECIFICATION');
 		});
 	});
 
-	it('should create AddAuthentication object correctly', () => {
+	it('should create NewAuth object correctly', () => {
 		// Arrange
 		const payload = {
 			username: 'ryumada',
@@ -45,10 +45,10 @@ describe('an AddAuthentication entities', () => {
 		};
 
 		// Action
-		const addAuthentication = new AddAuthentication(payload);
+		const newAuth = new NewAuth(payload);
 
 		// Assert
-		expect(addAuthentication.username).toEqual(payload.username);
-		expect(addAuthentication.password).toEqual(payload.password);
+		expect(newAuth.username).toEqual(payload.username);
+		expect(newAuth.password).toEqual(payload.password);
 	});
 });

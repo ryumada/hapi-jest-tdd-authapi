@@ -1,5 +1,5 @@
 // Domains
-const AddAuthentication = require('../../../Domains/authentications/entities/AddAuthentication');
+const NewAuth = require('../../../Domains/authentications/entities/NewAuth');
 // Repositories
 const AuthenticationRepository = require('../../../Domains/authentications/AuthenticationRepository');
 const UserRepository = require('../../../Domains/users/UserRepository');
@@ -17,7 +17,7 @@ describe('AuthenticationUseCase', () => {
 				username: 'ryumada',
 				password: 'super-secret-please',
 			};
-			const addAuthentication = new AddAuthentication(useCasePayload);
+			const newAuth = new NewAuth(useCasePayload);
 			const resultUser = {
 				id: 'user-1234567890123456',
 				password: 'some-hashed-password',
@@ -57,8 +57,8 @@ describe('AuthenticationUseCase', () => {
 			expect(typeof tokens.accessToken).toEqual('string');
 			expect(tokens).toHaveProperty('refreshToken');
 			expect(typeof tokens.refreshToken).toEqual('string');
-			expect(mockUserRepository.getUser).toBeCalledWith(addAuthentication.username);
-			expect(mockPasswordHash.compare).toBeCalledWith(addAuthentication.password, resultUser.password);
+			expect(mockUserRepository.getUser).toBeCalledWith(newAuth.username);
+			expect(mockPasswordHash.compare).toBeCalledWith(newAuth.password, resultUser.password);
 			expect(mockAuthTokenManager.generateAccessToken).toBeCalledWith({id: resultUser.id});
 			expect(mockAuthTokenManager.generateRefreshToken).toBeCalledWith({id: resultUser.id});
 			expect(mockAuthenticationRepository.addRefreshToken).toBeCalledWith('dummy_refreshToken');
@@ -132,7 +132,7 @@ describe('AuthenticationUseCase', () => {
 		});
 
 		it('should receive string refreshToken', async () => {
-		// Arrange
+			// Arrange
 			const useCasePayload = {
 				refreshToken: 1234567890, // Bad refreshToken
 			};
@@ -142,6 +142,19 @@ describe('AuthenticationUseCase', () => {
 
 			// Action & Assert
 			expect(getAuthenticationUseCase.refreshAuthentication(useCasePayload)).rejects.toThrowError('AUTHENTICATION_USE_CASE.REFRESH_TOKEN_MUST_BE_A_STRING');
+		});
+
+		it('should throw error when refreshToken not found', () => {
+			// Arrange
+			const useCasePayload = {
+				refreshToken: '', // Bad refreshToken
+			};
+
+			/** Creating use case instance */
+			const getAuthenticationUseCase = new AuthenticationUseCase({});
+
+			// Action & Assert
+			expect(getAuthenticationUseCase.refreshAuthentication(useCasePayload)).rejects.toThrowError('AUTHENTICATION_USE_CASE.NOT_CONTAIN_REFRESH_TOKEN');
 		});
 	});
 
@@ -190,6 +203,19 @@ describe('AuthenticationUseCase', () => {
 
 			// Action & Assert
 			expect(getAuthenticationUseCase.deleteAuthentication(useCasePayload)).rejects.toThrowError('AUTHENTICATION_USE_CASE.REFRESH_TOKEN_MUST_BE_A_STRING');
+		});
+
+		it('should throw error when refreshToken not found', () => {
+			// Arrange
+			const useCasePayload = {
+				refreshToken: '', // Bad refreshToken
+			};
+
+			/** Creating use case instance */
+			const getAuthenticationUseCase = new AuthenticationUseCase({});
+
+			// Action & Assert
+			expect(getAuthenticationUseCase.deleteAuthentication(useCasePayload)).rejects.toThrowError('AUTHENTICATION_USE_CASE.NOT_CONTAIN_REFRESH_TOKEN');
 		});
 	});
 });

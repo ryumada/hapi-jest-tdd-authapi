@@ -1,4 +1,4 @@
-const AddAuthentication = require('../../Domains/authentications/entities/AddAuthentication');
+const NewAuth = require('../../Domains/authentications/entities/NewAuth');
 
 class AuthenticationUseCase {
 	constructor({authenticationRepository, userRepository, passwordHash, authTokenManager}) {
@@ -9,10 +9,10 @@ class AuthenticationUseCase {
 	}
 
 	async addNewAuthentication(payload) {
-		const addAuthentication = new AddAuthentication(payload);
-		const {id, password: hashedPassword} = await this._userRepository.getUser(addAuthentication.username);
+		const newAuth = new NewAuth(payload);
+		const {id, password: hashedPassword} = await this._userRepository.getUser(newAuth.username);
 
-		if (!await this._passwordHash.compare(addAuthentication.password, hashedPassword)) {
+		if (!await this._passwordHash.compare(newAuth.password, hashedPassword)) {
 			throw new Error('AUTHENTICATION_USE_CASE.PASSWORD_MISMATCH');
 		}
 
@@ -24,9 +24,7 @@ class AuthenticationUseCase {
 	}
 
 	async refreshAuthentication({refreshToken}) {
-		if (typeof refreshToken !== 'string') {
-			throw new Error('AUTHENTICATION_USE_CASE.REFRESH_TOKEN_MUST_BE_A_STRING');
-		}
+		this.verifyRefreshToken(refreshToken);
 
 		await this._authenticationRepository.verifyRefreshToken(refreshToken);
 		await this._authTokenManager.verifyRefreshToken(refreshToken);
@@ -35,14 +33,22 @@ class AuthenticationUseCase {
 	}
 
 	async deleteAuthentication({refreshToken}) {
-		if (typeof refreshToken !== 'string') {
-			throw new Error('AUTHENTICATION_USE_CASE.REFRESH_TOKEN_MUST_BE_A_STRING');
-		}
+		this.verifyRefreshToken(refreshToken);
 
 		await this._authenticationRepository.verifyRefreshToken(refreshToken);
 		await this._authTokenManager.verifyRefreshToken(refreshToken);
 
 		await this._authenticationRepository.deleteRefreshToken(refreshToken);
+	}
+
+	verifyRefreshToken(refreshToken) {
+		if (!refreshToken) {
+			throw new Error('AUTHENTICATION_USE_CASE.NOT_CONTAIN_REFRESH_TOKEN');
+		}
+
+		if (typeof refreshToken !== 'string') {
+			throw new Error('AUTHENTICATION_USE_CASE.REFRESH_TOKEN_MUST_BE_A_STRING');
+		}
 	}
 }
 

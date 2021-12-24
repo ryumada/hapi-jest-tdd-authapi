@@ -1,4 +1,4 @@
-class AddAuthentication {
+class NewAuth {
 	constructor(payload) {
 		this._verifyPayload(payload);
 
@@ -10,13 +10,13 @@ class AddAuthentication {
 
 	_verifyPayload({username, password}) {
 		if (!username || !password) {
-			throw new Error('ADD_AUTHENTICATION.NOT_CONTAIN_NEEDED_PROPERTY');
+			throw new Error('NEW_AUTH.NOT_CONTAIN_NEEDED_PROPERTY');
 		}
 
 		if (typeof username !== 'string' || typeof password !== 'string') {
-			throw new Error('ADD_AUTHENTICATION.NOT_MEET_DATA_TYPE_SPECIFICATION');
+			throw new Error('NEW_AUTH.NOT_MEET_DATA_TYPE_SPECIFICATION');
 		}
 	}
 }
 
-module.exports = AddAuthentication;
+module.exports = NewAuth;
